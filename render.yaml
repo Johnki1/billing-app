@@ -2,7 +2,7 @@ services:
   - type: web
     name: backend-app
     env: docker
-    repo: https://github.com/tuusuario/tu-repo
+    repo: https://github.com/Johnki1/billing-app.git
     plan: free
     rootDir: Backend
     envVars:
