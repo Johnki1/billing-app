@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import api from "../api/axiosConfig";
 import { 
   Card, 
   CardContent,
@@ -19,7 +20,6 @@ import {
   InputLabel
 } from '@mui/material';
 import { MoreVert, Edit, Delete } from '@mui/icons-material';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 
 const ProductCard = ({ product, onProductUpdated }) => {
@@ -45,7 +45,7 @@ const ProductCard = ({ product, onProductUpdated }) => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('jwtToken');
-      await axios.delete(`http://localhost:8080/productos/${product.id}`, {
+      await api.delete(`/productos/${product.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       onProductUpdated();
@@ -81,7 +81,7 @@ const ProductCard = ({ product, onProductUpdated }) => {
         formData.append('imagen', newImage);
       }
 
-      await axios.put(`http://localhost:8080/productos/${product.id}`, formData, {
+      await api.put(`/productos/${product.id}`, formData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'

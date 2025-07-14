@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../api/axiosConfig";
 import { 
   Container, 
   Typography, 
@@ -11,7 +12,6 @@ import {
   Box, 
   Alert 
 } from "@mui/material";
-import axios from "axios";
 
 const CreateUser = () => {
   const [username, setUsername] = useState("");
@@ -26,8 +26,8 @@ const CreateUser = () => {
     setSuccess("");
     const token = localStorage.getItem("jwtToken");
     try {
-      await axios.post(
-        "http://localhost:8080/user/register",
+      await api.post(
+        "/user/register",
         { username, password, rol: role },
         { headers: { Authorization: `Bearer ${token}` } }
       );

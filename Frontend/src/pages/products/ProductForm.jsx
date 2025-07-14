@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../api/axiosConfig";
 import {
   Container,
   Typography,
@@ -13,7 +14,6 @@ import {
   Stack,
   Alert,
 } from "@mui/material";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ProductForm = () => {
@@ -61,7 +61,7 @@ const ProductForm = () => {
       );
       formData.append("imagen", newProduct.image);
 
-      await axios.post("http://localhost:8080/productos", formData, {
+      await api.post("/productos", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

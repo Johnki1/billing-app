@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../api/axiosConfig";
 import { 
   Container, 
   Typography, 
@@ -23,7 +24,6 @@ import {
   Box, 
   Alert 
 } from "@mui/material";
-import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -42,7 +42,7 @@ const ListUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/user/all", {
+      const response = await api.get("/user/all", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUsers(response.data);
@@ -71,7 +71,7 @@ const ListUsers = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/user/${deleteUserId}`, {
+      await api.delete(`/user/${deleteUserId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccessMessage("Usuario eliminado exitosamente.");
@@ -91,8 +91,8 @@ const ListUsers = () => {
 
   const handleUpdateUser = async () => {
     try {
-      await axios.put(
-        `http://localhost:8080/user/${selectedUser.id}`,
+      await api.put(
+        `/user/${selectedUser.id}`,
         { password: updatePassword, role: updateRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );

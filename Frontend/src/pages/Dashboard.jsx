@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container, Typography, Grid, Paper, Snackbar, Alert } from '@mui/material';
-import axios from 'axios';
 import websocket from '../services/websocket';
-
-const API_URL = 'http://localhost:8080';
+import api from "../api/axiosConfig";
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -23,7 +21,7 @@ const Dashboard = () => {
 
       try {
         console.log('[Dashboard] 🔍 Solicitando estadísticas al backend...');
-        const response = await axios.get(`${API_URL}/dashboard/stats`, {
+        const response = await api.get("/dashboard/stats", {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('[Dashboard] ✅ Estadísticas obtenidas:', response.data);

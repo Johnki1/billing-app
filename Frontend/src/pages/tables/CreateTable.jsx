@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Typography, TextField, Button, Box, Alert } from "@mui/material";
-import axios from "axios";
+import api from "../api/axiosConfig";
 
 const CreateTable = () => {
   const [tableNumber, setTableNumber] = useState("");
@@ -13,8 +13,8 @@ const CreateTable = () => {
     setSuccessMessage("");
     const token = localStorage.getItem("jwtToken");
     try {
-      await axios.post(
-        "http://localhost:8080/mesas",
+      await api.post(
+        "/mesas",
         { numero: tableNumber, estado: "LIBRE" },
         { headers: { Authorization: `Bearer ${token}` } }
       );

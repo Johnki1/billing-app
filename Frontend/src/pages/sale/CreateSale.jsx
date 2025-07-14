@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import api from "../api/axiosConfig";
 import {
   Container,
   Typography,
@@ -20,7 +21,6 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
@@ -41,8 +41,8 @@ const CreateSale = () => {
       try {
         const token = localStorage.getItem("jwtToken");
         const [tablesResponse, productsResponse] = await Promise.all([
-          axios.get("http://localhost:8080/mesas", { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get("http://localhost:8080/productos", { headers: { Authorization: `Bearer ${token}` } }),
+          api.get("/mesas", { headers: { Authorization: `Bearer ${token}` } }),
+          api.get("/productos", { headers: { Authorization: `Bearer ${token}` } }),
         ]);
         setTables(tablesResponse.data);
         setProducts(productsResponse.data);
@@ -103,7 +103,7 @@ const CreateSale = () => {
     };
     try {
       const token = localStorage.getItem("jwtToken");
-      await axios.post("http://localhost:8080/ventas", formattedSale, {
+      await api.post("/ventas", formattedSale, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNewSale({ tableId: "", detail: [], discount: 0 });

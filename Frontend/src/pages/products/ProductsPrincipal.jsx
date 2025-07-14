@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Container, Typography, Grid } from '@mui/material';
-import axios from 'axios';
 import ProductList from './ProductList';
 import ProductFilters from './ProductFilters';
+import api from "../api/axiosConfig";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -15,7 +15,7 @@ const Products = () => {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('jwtToken');
-      const response = await axios.get('http://localhost:8080/productos', {
+      const response = await api.get('/productos', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data);

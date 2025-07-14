@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../api/axiosConfig";
 import {
   Container,
   Typography,
@@ -23,7 +24,6 @@ import {
   MenuItem,
   ButtonGroup,
 } from "@mui/material";
-import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -42,8 +42,8 @@ const ListTables = () => {
 
   const fetchTables = async () => {
     try {
-      const url = filter === "FREE" ? "http://localhost:8080/mesas/libres" : "http://localhost:8080/mesas";
-      const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
+      const url = filter === "FREE" ? "/mesas/libres" : "/mesas";
+      const response = await api.get(url, { headers: { Authorization: `Bearer ${token}` } });
       setTables(response.data);
     } catch (err) {
       setError(err.response?.data?.message || "Error al obtener mesas");
@@ -61,7 +61,7 @@ const ListTables = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/mesas/${deleteTableId}`, {
+      await api.delete(`/mesas/${deleteTableId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuccessMessage("Mesa eliminada exitosamente.");
@@ -80,8 +80,8 @@ const ListTables = () => {
 
   const handleUpdateTable = async () => {
     try {
-      await axios.put(
-        `http://localhost:8080/mesas/${selectedTable.id}/estado`,
+      await api.put(
+        `/mesas/${selectedTable.id}/estado`,
         JSON.stringify(updateStatus),
         {
           headers: {

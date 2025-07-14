@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import api from "../api/axiosConfig";
 import {
   Container,
   Typography,
@@ -25,7 +26,6 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import axios from "axios";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -55,7 +55,7 @@ const SaleList = () => {
 
   const fetchSales = async (start, end) => {
     try {
-      const response = await axios.get("http://localhost:8080/ventas/usuario", {
+      const response = await api.get("/ventas/usuario", {
         params: {
           inicio: start || new Date().toISOString().slice(0, 16),
           fin: end || new Date().toISOString().slice(0, 16),
@@ -72,7 +72,7 @@ const SaleList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/productos", {
+      const response = await api.get("/productos", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data);
@@ -152,8 +152,8 @@ const SaleList = () => {
   const handleAddProducts = async () => {
     if (selectedSaleForAdd && additionalProducts.length > 0) {
       try {
-        await axios.put(
-          `http://localhost:8080/ventas/${selectedSaleForAdd.id}/agregarProductos`,
+        await api.put(
+          `/ventas/${selectedSaleForAdd.id}/agregarProductos`,
           { detail: additionalProducts },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -170,7 +170,7 @@ const SaleList = () => {
 
   const handleRemoveProduct = async (saleId, productoId) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/ventas/${saleId}/producto/${productoId}`, {
+      const response = await api.delete(`/ventas/${saleId}/producto/${productoId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSelectedSaleForView(response.data);
@@ -195,8 +195,8 @@ const SaleList = () => {
 
   const handleConfirmCompleteSale = async () => {
     try {
-      await axios.put(
-        `http://localhost:8080/ventas/${saleToComplete.id}/completar`,
+      await api.put(
+        `/ventas/${saleToComplete.id}/completar`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -213,8 +213,8 @@ const SaleList = () => {
   // Nueva función para actualizar el descuento y el detalle de venta
   const handleUpdateSale = async (updatedSale) => {
     try {
-      const response = await axios.put(
-        `http://localhost:8080/ventas/${updatedSale.id}/actualizar`,
+      const response = await api.put(
+        `/ventas/${updatedSale.id}/actualizar`,
         {
           discount: updatedSale.discount,
           saleDetail: updatedSale.saleDetail,
