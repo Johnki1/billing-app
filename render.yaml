@@ -21,7 +21,6 @@ services:
     name: frontend-app
     env: static
     repo: https://github.com/Johnki1/billing-app.git
-    plan: free
     rootDir: Frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
