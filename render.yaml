@@ -7,12 +7,12 @@ services:
     rootDir: Backend
     envVars:
       - key: SPRING_DATASOURCE_URL
-        fromEnvVar: SPRING_DATASOURCE_URL
+        value: ""
       - key: SPRING_DATASOURCE_USERNAME
-        fromEnvVar: SPRING_DATASOURCE_USERNAME
+        value: ""
       - key: SPRING_DATASOURCE_PASSWORD
-        fromEnvVar: SPRING_DATASOURCE_PASSWORD
+        value: ""
       - key: CLOUDINARY_URL
-        fromEnvVar: CLOUDINARY_URL
+        value: ""
       - key: CLOUDINARY_API_KEY
-        fromEnvVar: CLOUDINARY_API_KEY
+        value: ""
