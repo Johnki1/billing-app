@@ -18,7 +18,7 @@ services:
         value: ""
 
   - type: web
-    name: frontend-app
+    name: 1=2
     env: static
     repo: https://github.com/Johnki1/billing-app.git
     rootDir: Frontend
