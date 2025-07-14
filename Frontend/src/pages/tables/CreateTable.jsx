@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Typography, TextField, Button, Box, Alert } from "@mui/material";
-import api from "../api/axiosConfig";
+import api from "../../api/axiosConfig";
 
 const CreateTable = () => {
   const [tableNumber, setTableNumber] = useState("");

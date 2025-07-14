@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Typography, Grid } from '@mui/material';
 import ProductList from './ProductList';
 import ProductFilters from './ProductFilters';
-import api from "../api/axiosConfig";
+import api from "../../api/axiosConfig";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
