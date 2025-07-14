@@ -1,0 +1,48 @@
+:root {
+  --primary-color: #4A148C; /* Morado oscuro */
+  --secondary-color: #1976D2; /* Azul */
+  --background-color: #FFFFFF; /* Blanco */
+  --text-color: #333333; /* Gris oscuro para texto */
+  --accent-color: #FF4081; /* Rosa para acentos */
+  --light-text-color: #FFFFFF; /* Blanco para texto sobre fondos oscuros */
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+a {
+  color: var(--secondary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Asegurar que el texto sea legible en fondos oscuros */
+.MuiAppBar-root {
+  background-color: var(--primary-color) !important;
+  color: var(--light-text-color) !important;
+}
+
+.MuiPaper-root {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+}
+
+.MuiTypography-root {
+  color: var(--text-color) !important;
+}
+
+.MuiButton-contained {
+  background-color: var(--secondary-color) !important;
+  color: var(--light-text-color) !important;
+}
+
+.MuiButton-contained:hover {
+  background-color: #1565C0 !important; /* Un tono más oscuro de azul */
+}
