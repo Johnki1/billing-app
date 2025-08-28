@@ -44,27 +44,22 @@ const ProductForm = () => {
     try {
       const token = localStorage.getItem("jwtToken");
       const formData = new FormData();
-      formData.append(
-        "producto",
-        new Blob(
-          [
-            JSON.stringify({
-              nombre: newProduct.name,
-              precio: parseFloat(newProduct.price),
-              stock: parseInt(newProduct.stock),
-              descripcion: newProduct.description,
-              tipo: newProduct.category,
-            }),
-          ],
-          { type: "application/json" }
-        )
-      );
-      formData.append("imagen", newProduct.image);
+
+      // Se adjuntan los campos de texto y la imagen de forma individual
+      formData.append("nombre", newProduct.name);
+      formData.append("precio", parseFloat(newProduct.price));
+      formData.append("stock", parseInt(newProduct.stock));
+      formData.append("descripcion", newProduct.description);
+      formData.append("tipo", newProduct.category);
+
+      // Se añade la imagen solo si existe
+      if (newProduct.image) {
+        formData.append("imagen", newProduct.image);
+      }
 
       await api.post("/productos", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -79,9 +74,10 @@ const ProductForm = () => {
       });
       setImagePreview(null);
       navigate("/productos");
-    } catch (error) {
-      console.error("Error creating product:", error);
-      setError("Error al crear el producto");
+    } catch (err) {
+      console.error("Error creating product:", err.response || err);
+      // Puedes usar err.response.data para obtener un mensaje más específico del backend
+      setError("Error al crear el producto. Intente de nuevo.");
     }
   };
 
