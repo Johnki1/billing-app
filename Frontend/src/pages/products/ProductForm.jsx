@@ -32,11 +32,9 @@ const ProductForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Función mejorada para manejar archivos
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     
-    // Limpiar errores previos
     setError("");
     
     if (!file) {
@@ -45,15 +43,13 @@ const ProductForm = () => {
       return;
     }
 
-    // Validar tipo de archivo
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       setError("Tipo de archivo no válido. Usa JPG, PNG, GIF o WebP.");
       return;
     }
 
-    // Validar tamaño (máximo 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       setError("El archivo es demasiado grande. Máximo 5MB.");
       return;
@@ -61,7 +57,6 @@ const ProductForm = () => {
 
     setNewProduct({ ...newProduct, image: file });
     
-    // Crear preview de forma más segura
     try {
       const objectURL = URL.createObjectURL(file);
       setImagePreview(objectURL);
@@ -71,7 +66,6 @@ const ProductForm = () => {
     }
   };
 
-  // Función de validación
   const validateForm = () => {
     if (!newProduct.name.trim()) {
       setError("El nombre es requerido");
@@ -101,11 +95,9 @@ const ProductForm = () => {
   };
 
   const handleCreateProduct = async () => {
-    // Limpiar mensajes previos
     setError("");
     setSuccessMessage("");
 
-    // Validar formulario
     if (!validateForm()) {
       return;
     }
@@ -120,11 +112,8 @@ const ProductForm = () => {
         setLoading(false);
         return;
       }
-
-      // Crear FormData de forma más explícita
       const formData = new FormData();
-      
-      // Crear el objeto producto
+
       const productData = {
         nombre: newProduct.name.trim(),
         precio: parseFloat(newProduct.price),
@@ -133,14 +122,12 @@ const ProductForm = () => {
         tipo: newProduct.category,
       };
 
-      // Agregar datos del producto como blob JSON
       const productBlob = new Blob([JSON.stringify(productData)], {
         type: "application/json"
       });
       
       formData.append("producto", productBlob);
-      
-      // Agregar imagen
+
       formData.append("imagen", newProduct.image, newProduct.image.name);
 
       console.log("Enviando producto:", productData);
@@ -149,17 +136,15 @@ const ProductForm = () => {
       const response = await api.post("/productos", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // No establecer Content-Type, deja que el browser lo haga automáticamente
-          // "Content-Type": "multipart/form-data", // ← Quitar esta línea
+         
         },
-        timeout: 30000, // 30 segundos de timeout
+        timeout: 30000,
       });
 
       console.log("Producto creado:", response.data);
       
       setSuccessMessage("Producto creado exitosamente.");
       
-      // Limpiar formulario
       setNewProduct({
         name: "",
         price: "",
@@ -169,13 +154,11 @@ const ProductForm = () => {
         image: null,
       });
       
-      // Limpiar preview y liberar memoria
       if (imagePreview) {
         URL.revokeObjectURL(imagePreview);
         setImagePreview(null);
       }
 
-      // Navegar después de un breve delay
       setTimeout(() => {
         navigate("/productos");
       }, 1500);
