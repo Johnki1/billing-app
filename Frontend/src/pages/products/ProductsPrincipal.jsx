@@ -8,27 +8,17 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
-  // Debug: Confirmar que estamos en el componente correcto
-  console.log('=== PRODUCTS COMPONENT RENDERED ===');
-  console.log('Products state:', products);
-  console.log('FilteredProducts state:', filteredProducts);
 
   useEffect(() => {
-    console.log('Products useEffect triggered');
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
     try {
-      console.log('Fetching products...');
       const token = localStorage.getItem('jwtToken');
       const response = await api.get('/productos', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
-      console.log('API Response:', response.data);
-      console.log('Response type:', typeof response.data);
-      console.log('Is array:', Array.isArray(response.data));
       
       setProducts(response.data);
       setFilteredProducts(response.data);
@@ -38,7 +28,6 @@ const Products = () => {
   };
 
   const handleProductUpdated = () => {
-    console.log('handleProductUpdated called');
     fetchProducts(); 
   };
 
