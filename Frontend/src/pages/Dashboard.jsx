@@ -9,7 +9,6 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log('[Dashboard] useEffect inicial ejecutado');
 
     const fetchStats = async () => {
       const token = localStorage.getItem('jwtToken');
@@ -20,11 +19,9 @@ const Dashboard = () => {
       }
 
       try {
-        console.log('[Dashboard] 🔍 Solicitando estadísticas al backend...');
         const response = await api.get("/dashboard/stats", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log('[Dashboard] ✅ Estadísticas obtenidas:', response.data);
         setStats(response.data);
       } catch (err) {
         console.error('[Dashboard] ❌ Error al obtener estadísticas:', err);
@@ -35,25 +32,21 @@ const Dashboard = () => {
     fetchStats();
 
     const handleDashboardUpdate = (newStats) => {
-      console.log('[WebSocket] 📈 Actualización de dashboard recibida:', newStats);
       setStats(newStats);
     };
 
     const handleNotification = (message) => {
-      console.log('[WebSocket] 📢 Notificación recibida:', message);
       setNotification(message);
     };
 
     const token = localStorage.getItem('jwtToken');
     if (token) {
-      console.log('[WebSocket] 🚀 Intentando conectar con WebSocket...');
       websocket.connect(handleNotification, handleDashboardUpdate);
     } else {
       console.warn('[WebSocket] ⚠️ No hay token para conectar WebSocket');
     }
 
     return () => {
-      console.log('[Dashboard] 🧹 Desconectando WebSocket');
       websocket.disconnect();
     };
   }, []);
