@@ -35,7 +35,7 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<?> crearProducto(
+    public ResponseEntity<ProductDTO> crearProducto(
         @RequestPart("producto") @Valid ProductDTO producto,
         @RequestPart("imagen") MultipartFile imagen
     ) {
