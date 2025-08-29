@@ -32,44 +32,87 @@ const ProductForm = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setNewProduct({ ...newProduct, image: file });
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    } else {
-      setImagePreview(null);
-    }
-  };
+ const handleFileChange = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const MAX_WIDTH = 800; // ancho máximo permitido
+      const scaleSize = MAX_WIDTH / img.width;
+
+      canvas.width = MAX_WIDTH;
+      canvas.height = img.height * scaleSize;
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const compressedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+
+            setNewProduct({ ...newProduct, image: compressedFile });
+            setImagePreview(URL.createObjectURL(compressedFile));
+          }
+        },
+        "image/jpeg",
+        0.7 
+      );
+    };
+  } catch (err) {
+    console.error("Error comprimiendo imagen:", err);
+    setNewProduct({ ...newProduct, image: file });
+    setImagePreview(URL.createObjectURL(file));
+  }
+};
 
 const handleCreateProduct = async () => {
   try {
     const token = localStorage.getItem("jwtToken");
-    console.log("TOKEN ENVIADO:", token); // 👈 Verifica en móvil si sale null
+
+    if (!newProduct.name || !newProduct.price || !newProduct.stock || !newProduct.category || !newProduct.image) {
+      setError("Todos los campos y la imagen son obligatorios.");
+      return;
+    }
+
+    const precio = parseFloat(newProduct.price);
+    const stock = parseInt(newProduct.stock);
+
+    if (isNaN(precio) || isNaN(stock)) {
+      setError("Precio y stock deben ser números válidos.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append(
       "producto",
-      new Blob([JSON.stringify({
-        nombre: newProduct.name,
-        precio: parseFloat(newProduct.price),
-        stock: parseInt(newProduct.stock),
-        descripcion: newProduct.description,
-        tipo: newProduct.category,
-      })], { type: "application/json" }) // volvemos al Blob para máxima compatibilidad
+      new Blob(
+        [JSON.stringify({
+          nombre: newProduct.name,
+          precio,
+          stock,
+          descripcion: newProduct.description,
+          tipo: newProduct.category
+        })],
+        { type: "application/json" }
+      )
     );
-
-    if (newProduct.image) {
-      formData.append("imagen", newProduct.image);
-    }
+    formData.append("imagen", newProduct.image);
 
     const response = await api.post("/productos", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    console.log("RESPUESTA:", response.data);
 
     setSuccessMessage("Producto creado exitosamente.");
     setNewProduct({
@@ -82,6 +125,7 @@ const handleCreateProduct = async () => {
     });
     setImagePreview(null);
     navigate("/productos");
+
   } catch (error) {
     if (error.response) {
       console.error("Error response:", error.response.data);
@@ -95,6 +139,7 @@ const handleCreateProduct = async () => {
     }
   }
 };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Paper sx={{ p: 3 }}>
