@@ -45,28 +45,31 @@ const ProductForm = () => {
 const handleCreateProduct = async () => {
   try {
     const token = localStorage.getItem("jwtToken");
-    const formData = new FormData();
+    console.log("TOKEN ENVIADO:", token); // 👈 Verifica en móvil si sale null
 
+    const formData = new FormData();
     formData.append(
       "producto",
-      JSON.stringify({
+      new Blob([JSON.stringify({
         nombre: newProduct.name,
         precio: parseFloat(newProduct.price),
         stock: parseInt(newProduct.stock),
         descripcion: newProduct.description,
         tipo: newProduct.category,
-      })
+      })], { type: "application/json" }) // volvemos al Blob para máxima compatibilidad
     );
 
     if (newProduct.image) {
       formData.append("imagen", newProduct.image);
     }
 
-    await api.post("/productos", formData, {
+    const response = await api.post("/productos", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    console.log("RESPUESTA:", response.data);
 
     setSuccessMessage("Producto creado exitosamente.");
     setNewProduct({
@@ -80,11 +83,18 @@ const handleCreateProduct = async () => {
     setImagePreview(null);
     navigate("/productos");
   } catch (error) {
-    console.error("Error creating product:", error?.response || error.message);
-    setError("Error al crear el producto");
+    if (error.response) {
+      console.error("Error response:", error.response.data);
+      setError("Error: " + JSON.stringify(error.response.data));
+    } else if (error.request) {
+      console.error("Error request:", error.request);
+      setError("Error de red o sin respuesta del servidor");
+    } else {
+      console.error("Error mensaje:", error.message);
+      setError("Error: " + error.message);
+    }
   }
 };
-
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Paper sx={{ p: 3 }}>
