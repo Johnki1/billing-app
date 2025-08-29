@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/ping").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/user/**" ).hasRole("ADMINISTRADOR")
                                 .requestMatchers(HttpMethod.GET,"/user/**").hasRole("ADMINISTRADOR")
