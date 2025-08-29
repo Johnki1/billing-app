@@ -66,8 +66,8 @@ const ProductCard = ({ product, onProductUpdated }) => {
   if (file) {
     try {
       const options = {
-        maxSizeMB: 0.5,            // máximo 500KB
-        maxWidthOrHeight: 1024,    // redimensiona si es muy grande
+        maxSizeMB: 0.5,          
+        maxWidthOrHeight: 1024,
         useWebWorker: true,
       };
       const compressedFile = await imageCompression(file, options);
