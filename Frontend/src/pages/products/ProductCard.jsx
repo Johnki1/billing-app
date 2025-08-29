@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import api from "../../api/axiosConfig";
+import imageCompression from 'browser-image-compression';
 import { 
   Card, 
   CardContent,
@@ -60,9 +61,22 @@ const ProductCard = ({ product, onProductUpdated }) => {
     handleMenuClose();
   };
 
-  const handleFileChange = (event) => {
-    setNewImage(event.target.files[0]);
-  };
+  const handleFileChange = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    try {
+      const options = {
+        maxSizeMB: 0.5,            // máximo 500KB
+        maxWidthOrHeight: 1024,    // redimensiona si es muy grande
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(file, options);
+      setNewImage(compressedFile); // 👈 usamos la comprimida, no la original
+    } catch (error) {
+      console.error("Error al comprimir la imagen:", error);
+    }
+  }
+};
 
   const handleUpdate = async () => {
     try {
