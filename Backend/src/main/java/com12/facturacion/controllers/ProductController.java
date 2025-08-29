@@ -35,13 +35,21 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public ResponseEntity<ProductDTO> crearProducto(
-            @RequestPart("producto") @Valid ProductDTO producto,
-            @RequestPart("imagen") MultipartFile imagen
+    public ResponseEntity<?> crearProducto(
+        @RequestPart("producto") @Valid ProductDTO producto,
+        @RequestPart("imagen") MultipartFile imagen
     ) {
-        return ResponseEntity.ok(productService.crearProducto(producto, imagen));
+    if (imagen == null || imagen.isEmpty()) {
+        return ResponseEntity.badRequest().body("La imagen es obligatoria");
     }
-
+    try {
+        return ResponseEntity.ok(productService.crearProducto(producto, imagen));
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno: " + e.getMessage());
+    }
+}
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<ProductDTO> actualizarProducto(
