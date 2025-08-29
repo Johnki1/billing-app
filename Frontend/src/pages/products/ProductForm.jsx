@@ -42,49 +42,49 @@ const ProductForm = () => {
     }
   };
 
-  const handleCreateProduct = async () => {
-    try {
-      const token = localStorage.getItem("jwtToken");
-      const formData = new FormData();
-      formData.append(
-        "producto",
-        new Blob(
-          [
-            JSON.stringify({
-              nombre: newProduct.name,
-              precio: parseFloat(newProduct.price),
-              stock: parseInt(newProduct.stock),
-              descripcion: newProduct.description,
-              tipo: newProduct.category,
-            }),
-          ],
-          { type: "application/json" }
-        )
-      );
-      formData.append("imagen", newProduct.image);
-      
-      await api.post("/productos", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+const handleCreateProduct = async () => {
+  try {
+    const token = localStorage.getItem("jwtToken");
+    const formData = new FormData();
 
-      });
-      setSuccessMessage("Producto creado exitosamente.");
-      setNewProduct({
-        name: "",
-        price: "",
-        stock: "",
-        category: "",
-        description: "",
-        image: null,
-      });
-      setImagePreview(null);
-      navigate("/productos");
-    } catch (error) {
-      console.error("Error creating product:", error);
-      setError("Error al crear el producto");
-    }
-  };
+    formData.append(
+      "producto",
+      JSON.stringify({
+        nombre: newProduct.name,
+        precio: parseFloat(newProduct.price),
+        stock: parseInt(newProduct.stock),
+        descripcion: newProduct.description,
+        tipo: newProduct.category,
+      })
+    );
+
+    if (newProduct.image) {
+      formData.append("imagen", newProduct.image);
+    }
+
+    await api.post("/productos", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setSuccessMessage("Producto creado exitosamente.");
+    setNewProduct({
+      name: "",
+      price: "",
+      stock: "",
+      category: "",
+      description: "",
+      image: null,
+    });
+    setImagePreview(null);
+    navigate("/productos");
+  } catch (error) {
+    console.error("Error creating product:", error?.response || error.message);
+    setError("Error al crear el producto");
+  }
+};
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Paper sx={{ p: 3 }}>
